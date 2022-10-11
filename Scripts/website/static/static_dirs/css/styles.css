@@ -1,0 +1,22 @@
+.html {
+    font-size: 100%;
+}
+
+.center {
+    margin:auto;
+    width: 90%;
+}
+
+.card[data-clickable=true] {
+    cursor: pointer;
+}
+
+.card-content {
+    width: 65%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .main-content {
+        width: 97%;
+    }
+}
