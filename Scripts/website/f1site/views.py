@@ -10,15 +10,18 @@ from django.views.generic.edit import FormView
 
 from . import models
 
+
 # URL: /
 def viewIndex(request):
     context = {}
     return render(request, 'index.html', context)
 
+
 # URL: /
 def viewDriverRanking(request):
     context = {}
     return render(request, 'drivers.html', context)
+
 
 # URL: /
 def viewRaceRanking(request):
@@ -26,6 +29,8 @@ def viewRaceRanking(request):
     return render(request, 'races.html', context)
 
     # URL: /
+
+
 def viewTeamRanking(request):
     context = {}
     return render(request, 'teams.html', context)
