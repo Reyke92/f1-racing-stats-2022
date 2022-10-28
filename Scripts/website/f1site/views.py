@@ -8,7 +8,8 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 
-from . import models
+from f1site.models import Driver, Event, GP, Team, Track
+from .f1utils import getRankings
 
 
 # URL: /
@@ -17,20 +18,28 @@ def viewIndex(request):
     return render(request, 'index.html', context)
 
 
-# URL: /
+# URL: /drivers
 def viewDriverRanking(request):
-    context = {}
+    gp = GP.objects.filter(date__year=datetime.now().year.real)
+
+    context = {'drivers': Driver.objects.all()}
     return render(request, 'drivers.html', context)
 
 
-# URL: /
-def viewRaceRanking(request):
-    context = {}
+# URL: /races
+def viewRaces(request):
+    context = {'gpArray': GP.objects.all()}
     return render(request, 'races.html', context)
 
-    # URL: /
+
+# URL: /races/<gpID>
+def viewRaceRanking(request, gpID):
+    gp = get_object_or_404(GP, id=gpID)
+    context = {'gp': gp}
+    return render(request, 'races.html', context)
 
 
+# URL: /teams
 def viewTeamRanking(request):
     context = {}
     return render(request, 'teams.html', context)

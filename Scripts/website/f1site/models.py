@@ -16,7 +16,6 @@ class GP(models.Model):
 class Track(models.Model):
     # id = models.BigAutoField() <--- PRIMARY KEY
     name = models.CharField(max_length=40, null=False)
-    location = models.ForeignKey('Location', null=False, on_delete=models.DO_NOTHING)
     country = models.CharField(max_length=25, null=False)
 
     def __str__(self):
@@ -45,7 +44,7 @@ class Event(models.Model):
     # Sprint Points: the amount of points earned from the sprint race.
     sprintPoints = models.PositiveSmallIntegerField(null=True)
 
-    # (Final) Race Points: the amount of points earned from the the final race.
+    # (Final) Race Points: the amount of points earned from the final race.
     racePoints = models.PositiveSmallIntegerField(null=False)
 
     def __str__(self):
