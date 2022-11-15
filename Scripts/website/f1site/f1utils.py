@@ -1,15 +1,10 @@
 from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Race
 
-MAX_NUM_RACERS = 35
-
 
 class Ranking():
     def __init__(self, driverID, points):
         self.driverID = driverID
         self.points = points
-
-    def computeHash(self):
-        return _hashDriverID(self.driverID)
 
 
 # Returns the winners of each of the GPs within the year specified.
@@ -25,54 +20,51 @@ def getYearRankings(year):
     return rankings
 
 
-# Rankings are stored in the format of [driver_id, points], sorted from greatest to least.
+# Rankings are stored in the format of key-value:
+# Key = driverID
+# Value = Ranking
+# sorted from greatest to least.
 def getRankings(gp):
-    # Rankings are stored as rankings[_hashDriverID(driver_id)] = [driver_id, points].
-    rankings = [None] * MAX_NUM_RACERS
+    # Rankings are stored as rankings[driver_id] = Ranking
+    rankings = {}
     events = Event.objects.filter(gp_id=gp.id)
+    pointsToAdd = 0
     for event in events:
-        hashID = _hashDriverID(event.driver_id)
-        if (rankings[hashID] is None):
-            rankings[hashID] = Ranking(driverID=event.driver_id, points=0)
+        pointsToAdd = 0
+        if (event.driver_id not in rankings):
+            rankings[event.driver_id] = Ranking(driverID=event.driver_id, points=0)
 
-        rankings[hashID].points += event.race.points
-        if (event.sprint is not None):
-            rankings[hashID].points += event.sprint.points
+        pointsToAdd += event.race.points
+        if (event.type is event.EventType.SPRINT):
+            pointsToAdd += event.sprint.points
+            
+        rankings[event.driver_id].points += pointsToAdd
 
-    # Remove any and all null keys in the rankings array.
-    rankIndex = 0
-    numRankings = len(rankings)
-    while (rankIndex < numRankings):
-        ranking = rankings[rankIndex]
-        if (ranking is None):
-            rankings.pop(rankIndex)
-            numRankings -= 1
-        else:
-            rankIndex += 1
+    # Convert the dictionary to a list
+    rankingsArray = [None] * len(rankings)
+    i = 0
+    for rankingKey in rankings:
+        rankingsArray[i] = rankings[rankingKey]
+        i += 1
 
     # Sort the rankings array in order of greatest to least points.
-    numRankings = len(rankings)
+    numRankings = len(rankingsArray)
     curPoints = 0
     curGreatestNum = -1
     curGreatestNumIndex = 0
     i = 0
     while (i < numRankings - 1):
-        curPoints = rankings[i].points
+        curPoints = rankingsArray[i].points
         k = i + 1
         while (k < numRankings):
-            if (rankings[k].points > curGreatestNum):
-                curGreatestNum = rankings[k].points
+            if (rankingsArray[k].points > curGreatestNum):
+                curGreatestNum = rankingsArray[k].points
                 curGreatestNumIndex = k
             k += 1 # Increment k.
 
         if (curPoints < curGreatestNum):
-            tmp = rankings[i]
-            rankings[i] = rankings[curGreatestNumIndex]
-            rankings[curGreatestNumIndex] = tmp
+            tmp = rankingsArray[i]
+            rankingsArray[i] = rankingsArray[curGreatestNumIndex]
+            rankingsArray[curGreatestNumIndex] = tmp
         i += 1 # Increment i.
-
-    return rankings
-
-
-def _hashDriverID(id):
-    return id % MAX_NUM_RACERS # Estimated max upper-limit of the number of racers total.
+    return rankingsArray
