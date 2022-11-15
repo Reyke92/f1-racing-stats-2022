@@ -35,7 +35,7 @@ def getRankings(gp):
             rankings[event.driver_id] = Ranking(driverID=event.driver_id, points=0)
 
         pointsToAdd += event.race.points
-        if (event.type is event.EventType.SPRINT):
+        if (gp.type is GP.GPType.SPRINT):
             pointsToAdd += event.sprint.points
             
         rankings[event.driver_id].points += pointsToAdd

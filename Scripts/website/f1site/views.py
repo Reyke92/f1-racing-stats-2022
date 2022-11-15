@@ -41,7 +41,12 @@ def viewRaces(request):
 # URL: /races/<gpID>
 def viewRaceRanking(request, gpID):
     gp = get_object_or_404(GP, id=gpID)
-    context = {'gp': gp}
+    rankings = getRankings(gp)
+    context = {
+        'gp': gp,
+        'rankings': rankings
+    }
+
     return render(request, 'races.html', context)
 
 
