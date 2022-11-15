@@ -2,7 +2,6 @@ from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Ra
 
 MAX_NUM_RACERS = 35
 
-
 class Ranking():
     def __init__(self, driverID, points):
         self.driverID = driverID
