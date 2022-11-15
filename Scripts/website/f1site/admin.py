@@ -6,5 +6,8 @@ from .models import *
 admin.site.register(GP)
 admin.site.register(Track)
 admin.site.register(Event)
+admin.site.register(Qualifying)
+admin.site.register(Sprint)
+admin.site.register(Race)
 admin.site.register(Driver)
 admin.site.register(Team)

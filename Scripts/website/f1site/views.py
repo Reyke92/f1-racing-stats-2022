@@ -8,13 +8,19 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 
-from f1site.models import Driver, Event, GP, Team, Track
-from .f1utils import getRankings
+from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Race
+from .f1utils import getRankings, getYearRankings
 
 
 # URL: /
 def viewIndex(request):
-    context = {}
+    curYear = datetime.now().year
+    rankings = getYearRankings(curYear)
+
+    context = {
+        'currentYear': curYear,
+        'rankings' : rankings
+    }
     return render(request, 'index.html', context)
 
 
