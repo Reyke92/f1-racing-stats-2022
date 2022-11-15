@@ -13,10 +13,10 @@
             </tr>
             {% for ranking in rankings %}
             <tr>
-                <th>ranking.gpDate</th>
-                <th>ranking.gpName</th>
-                <th>ranking.winner</th>
-                <th>ranking.team</th>
+                <th>{{ ranking.gp.date }}</th>
+                <th>{{ ranking.gp.name }}</th>
+                <th>{{ ranking.driver.name }}</th>
+                <th>{{ ranking.driver.team.name }}</th>
             </tr>
             {% endfor %}
         </table>
