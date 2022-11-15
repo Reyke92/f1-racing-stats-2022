@@ -21,6 +21,10 @@ class Track(models.Model):
 
 
 class Event(models.Model):
+    class EventType(models.IntegerChoices):
+        NON_SPRINT = 0
+        SPRINT = 1
+
     # id = models.BigAutoField() <--- PRIMARY KEY
     gp = models.ForeignKey('GP', null=False, on_delete=models.CASCADE)
     
@@ -29,6 +33,7 @@ class Event(models.Model):
     # Driver Team: the team the driver was playing for within this particular race.
     driverTeam = models.ForeignKey('Team', null=False, on_delete=models.CASCADE)
 
+    type = models.PositiveSmallIntegerField(choices=EventType.choices, null=False)
     qualifying = models.ForeignKey('Qualifying', null=False, on_delete=models.DO_NOTHING)
     race = models.ForeignKey('Race', null=False, on_delete=models.DO_NOTHING)
     sprint = models.ForeignKey('Sprint', null=True, on_delete=models.DO_NOTHING)
