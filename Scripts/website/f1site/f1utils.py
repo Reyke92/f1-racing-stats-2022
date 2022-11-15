@@ -2,6 +2,7 @@ from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Ra
 
 MAX_NUM_RACERS = 35
 
+
 class Ranking():
     def __init__(self, driverID, points):
         self.driverID = driverID
@@ -9,6 +10,7 @@ class Ranking():
 
     def computeHash(self):
         return _hashDriverID(self.driverID)
+
 
 # Returns the winners of each of the GPs within the year specified.
 def getYearRankings(year):
