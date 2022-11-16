@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 
 from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Race
-from .f1utils import getRankings, getYearRankings
+from .f1utils import getYearRankings, getRankingsByPosition
 
 
 # URL: /
@@ -35,19 +35,31 @@ def viewDriverRanking(request):
 # URL: /races
 def viewRaces(request):
     context = {'gpArray': GP.objects.all()}
-    return render(request, 'races.html', context)
+    return render(request, 'gp.html', context)
 
 
-# URL: /races/<gpID>
-def viewRaceRanking(request, gpID):
+# URL: /gp/<gpID>
+def viewGPRanking(request, gpID):
     gp = get_object_or_404(GP, id=gpID)
-    rankings = getRankings(gp)
+    rankings = getRankingsByPosition(gp)
     context = {
         'gp': gp,
-        'rankings': rankings
+        'raceRankings': rankings['raceRankings'],
+        'qualRankings': rankings['qualRankings'],
+        'NON_SPRINT': GP.GPType.NON_SPRINT,
+        'SPRINT': GP.GPType.SPRINT
     }
+    for ranking in context['raceRankings']:
+        ranking.driver = Driver.objects.get(id=ranking.driverID)
+    for ranking in context['qualRankings']:
+        ranking.driver = Driver.objects.get(id=ranking.driverID)
 
-    return render(request, 'races.html', context)
+    if ('sprintRankings' in rankings):
+        context['sprintRankings'] = rankings['sprintRankings']
+        for ranking in context['sprintRankings']:
+            ranking.driver = Driver.objects.get(id=ranking.driverID)
+
+    return render(request, 'gp.html', context)
 
 
 # URL: /teams

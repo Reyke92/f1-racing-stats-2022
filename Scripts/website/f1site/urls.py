@@ -8,6 +8,6 @@ urlpatterns = [
     path('', views.viewIndex, name='index'),
     path('drivers/', views.viewDriverRanking, name='drivers'),
     path('races/', views.viewRaces, name='races'),
-    path('races/<int:gpID>', views.viewRaceRanking, name='race'),
+    path('gp/<int:gpID>', views.viewGPRanking, name='gp'),
     path('teams/', views.viewTeamRanking, name='teams'),
 ]
