@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 
 from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Race
-from .f1utils import getYearRankings, getRankingsByPosition
+from .f1utils import getYearRankings, getRankingsByPosition, getRankingsByPoints
 
 
 # URL: /

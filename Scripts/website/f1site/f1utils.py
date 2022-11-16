@@ -22,10 +22,6 @@ def getYearRankings(year):
     return rankings
 
 
-# Rankings are stored in the format of key-value:
-# Key = driverID
-# Value = Ranking
-# sorted from greatest to least IN TERMS OF POSITION.
 def getRankingsByPosition(gp):
     # Rankings are stored as rankings[driver_id] = Ranking
     events = Event.objects.filter(gp_id=gp.id)
@@ -61,39 +57,14 @@ def getRaceRankingsByPosition(gp, events=None):
         rankings[event.driver_id].points += event.race.points
 
     # Convert the dictionary to a list
-    rankingsArray = [None] * len(rankings)
-    i = 0
-    for rankingKey in rankings:
-        rankingsArray[i] = rankings[rankingKey]
-        i += 1
+    rankingsArray = _convertDictToArray(rankings)
 
-    # Sort the rankings array in order of greatest to least position.
-    numRankings = len(rankingsArray)
-    curPos = 0
-    curGreatestPos = -1
-    curGreatestPosIndex = 0
-    i = 0
-    while (i < numRankings - 1):
-        curPos = rankingsArray[i].position
-        k = i + 1
-        while (k < numRankings):
-            if (rankingsArray[k].position > curGreatestPos):
-                curGreatestPos = rankingsArray[k].position
-                curGreatestPosIndex = k
-            k += 1  # Increment k.
+    # Sort the rankings array in order of 'greatest' to 'least' position.
+    rankingsArray = _sortRankingsByPosition(rankingsArray)
 
-        if (curPos < curGreatestPos):
-            tmp = rankingsArray[i]
-            rankingsArray[i] = rankingsArray[curGreatestPosIndex]
-            rankingsArray[curGreatestPosIndex] = tmp
-        i += 1  # Increment i.
     return rankingsArray
 
 
-# Rankings are stored in the format of key-value:
-# Key = driverID
-# Value = Ranking
-# sorted from greatest to least IN TERMS OF POINTS.
 def getSprintRankingsByPosition(gp, events=None):
     if (gp.type == GP.GPType.NON_SPRINT): return None
 
@@ -115,32 +86,10 @@ def getSprintRankingsByPosition(gp, events=None):
             rankings[event.driver_id].points += event.sprint.points
 
     # Convert the dictionary to a list
-    rankingsArray = [None] * len(rankings)
-    i = 0
-    for rankingKey in rankings:
-        rankingsArray[i] = rankings[rankingKey]
-        i += 1
+    rankingsArray = _convertDictToArray(rankings)
 
-    # Sort the rankings array in order of greatest to least position.
-    numRankings = len(rankingsArray)
-    curPos = 0
-    curGreatestPos = -1
-    curGreatestPosIndex = 0
-    i = 0
-    while (i < numRankings - 1):
-        curPos = rankingsArray[i].position
-        k = i + 1
-        while (k < numRankings):
-            if (rankingsArray[k].position > curGreatestPos):
-                curGreatestPos = rankingsArray[k].position
-                curGreatestPosIndex = k
-            k += 1  # Increment k.
-
-        if (curPos < curGreatestPos):
-            tmp = rankingsArray[i]
-            rankingsArray[i] = rankingsArray[curGreatestPosIndex]
-            rankingsArray[curGreatestPosIndex] = tmp
-        i += 1  # Increment i.
+    # Sort the rankings array in order of 'greatest' to 'least' position.
+    rankingsArray = _sortRankingsByPosition(rankingsArray)
     return rankingsArray
 
 
@@ -160,39 +109,13 @@ def getQualRankingsByPosition(gp, events=None):
             rankings[event.driver_id].fastestLap = event.qualifying.fastestLap
 
     # Convert the dictionary to a list
-    rankingsArray = [None] * len(rankings)
-    i = 0
-    for rankingKey in rankings:
-        rankingsArray[i] = rankings[rankingKey]
-        i += 1
+    rankingsArray = _convertDictToArray(rankings)
 
-    # Sort the rankings array in order of greatest to least position.
-    numRankings = len(rankingsArray)
-    curPos = 0
-    curGreatestPos = -1
-    curGreatestPosIndex = 0
-    i = 0
-    while (i < numRankings - 1):
-        curPos = rankingsArray[i].position
-        k = i + 1
-        while (k < numRankings):
-            if (rankingsArray[k].position > curGreatestPos):
-                curGreatestPos = rankingsArray[k].position
-                curGreatestPosIndex = k
-            k += 1  # Increment k.
-
-        if (curPos < curGreatestPos):
-            tmp = rankingsArray[i]
-            rankingsArray[i] = rankingsArray[curGreatestPosIndex]
-            rankingsArray[curGreatestPosIndex] = tmp
-        i += 1  # Increment i.
+    # Sort the rankings array in order of 'greatest' to 'least' position.
+    rankingsArray = _sortRankingsByPosition(rankingsArray)
     return rankingsArray
 
 
-# Rankings are stored in the format of key-value:
-# Key = driverID
-# Value = Ranking
-# sorted from greatest to least IN TERMS OF POINTS.
 def getRankingsByPoints(gp):
     # Rankings are stored as rankings[driver_id] = Ranking
     rankings = {}
@@ -239,10 +162,6 @@ def getRankingsByPoints(gp):
     return rankingsArray
 
 
-# Rankings are stored in the format of key-value:
-# Key = driverID
-# Value = Ranking
-# sorted from greatest to least IN TERMS OF POINTS.
 def getRaceRankingsByPoints(gp, events=None):
     # Rankings are stored as rankings[driver_id] = Ranking
     rankings = {}
@@ -261,39 +180,13 @@ def getRaceRankingsByPoints(gp, events=None):
         rankings[event.driver_id].points += event.race.points
 
     # Convert the dictionary to a list
-    rankingsArray = [None] * len(rankings)
-    i = 0
-    for rankingKey in rankings:
-        rankingsArray[i] = rankings[rankingKey]
-        i += 1
+    rankingsArray = _convertDictToArray(rankings)
 
-    # Sort the rankings array in order of greatest to least points.
-    numRankings = len(rankingsArray)
-    curPoints = 0
-    curGreatestNum = -1
-    curGreatestNumIndex = 0
-    i = 0
-    while (i < numRankings - 1):
-        curPoints = rankingsArray[i].points
-        k = i + 1
-        while (k < numRankings):
-            if (rankingsArray[k].points > curGreatestNum):
-                curGreatestNum = rankingsArray[k].points
-                curGreatestNumIndex = k
-            k += 1  # Increment k.
-
-        if (curPoints < curGreatestNum):
-            tmp = rankingsArray[i]
-            rankingsArray[i] = rankingsArray[curGreatestNumIndex]
-            rankingsArray[curGreatestNumIndex] = tmp
-        i += 1  # Increment i.
+    # Sort the rankings array in order of 'greatest' to 'least' position.
+    rankingsArray = _sortRankingsByPoints(rankingsArray)
     return rankingsArray
 
 
-# Rankings are stored in the format of key-value:
-# Key = driverID
-# Value = Ranking
-# sorted from greatest to least IN TERMS OF POINTS.
 def getSprintRankingsByPoints(gp, events=None):
     if (gp.type == GP.GPType.NON_SPRINT): return None
 
@@ -315,13 +208,42 @@ def getSprintRankingsByPoints(gp, events=None):
             rankings[event.driver_id].points += event.sprint.points
 
     # Convert the dictionary to a list
-    rankingsArray = [None] * len(rankings)
+    rankingsArray = _convertDictToArray(rankings)
+
+    # Sort the rankings array in order of 'greatest' to 'least' position.
+    rankingsArray = _sortRankingsByPoints(rankingsArray)
+    return rankingsArray
+
+
+def _convertDictToArray(dict):
+    dictArray = [None] * len(dict)
     i = 0
-    for rankingKey in rankings:
-        rankingsArray[i] = rankings[rankingKey]
+    for key in dict:
+        dictArray[i] = dict[key]
         i += 1
 
-    # Sort the rankings array in order of greatest to least points.
+    return dictArray
+
+
+# Sort the rankings array in order of 'greatest' to 'least' position (i.e. 1, 2, 3, ...).
+def _sortRankingsByPosition(rankingsArray):
+    numRankings = len(rankingsArray)
+    i = 0
+    curRanking = None
+    while (i < numRankings - 1): # Go through every ranking in rankingsArray
+        curRanking = rankingsArray[i]
+        # If the current ranking is NOT in the correct place, put it there.
+        if (curRanking.position - 1 != i):
+            tmp = rankingsArray[curRanking.position - 1]
+            rankingsArray[curRanking.position - 1] = curRanking
+            rankingsArray[i] = tmp
+        else: # If the current ranking IS in the correct place, move on to i+1.
+            i += 1
+
+    return rankingsArray
+
+
+def _sortRankingsByPoints(rankingsArray):
     numRankings = len(rankingsArray)
     curPoints = 0
     curGreatestNum = -1
@@ -341,4 +263,5 @@ def getSprintRankingsByPoints(gp, events=None):
             rankingsArray[i] = rankingsArray[curGreatestNumIndex]
             rankingsArray[curGreatestNumIndex] = tmp
         i += 1  # Increment i.
+
     return rankingsArray
