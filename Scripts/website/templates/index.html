@@ -5,20 +5,24 @@
     <h1>F1 Racing {{currentYear}}</h1>
     <div>
         <table class="table table-striped table-hover">
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Winner</th>
-                <th>Winner Team</th>
-            </tr>
-            {% for ranking in rankings %}
-            <tr>
-                <th>{{ ranking.gp.date }}</th>
-                <th>{{ ranking.gp.name }}</th>
-                <th>{{ ranking.driver.name }}</th>
-                <th>{{ ranking.driver.team.name }}</th>
-            </tr>
-            {% endfor %}
+            <thead class="table-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Winner</th>
+                    <th>Winner Team</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                {% for ranking in rankings %}
+                <tr class="href-row" data-href="gp/{{ranking.gp.id}}">
+                    <th>{{ ranking.gp.date }}</th>
+                    <th>{{ ranking.gp.name }}</th>
+                    <th>{{ ranking.driver.name }}</th>
+                    <th>{{ ranking.driver.team.name }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>

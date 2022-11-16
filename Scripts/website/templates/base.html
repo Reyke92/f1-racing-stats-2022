@@ -11,7 +11,7 @@
         {% block headStuff %}{% endblock %}
     </head>
     <body class="bg-light">
-        <nav class="navbar navbar-dark bg-primary">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">F1 Racing Stats</a>
                 <div class="d-flex ms-auto">
@@ -24,5 +24,23 @@
         </nav>
         {% block content %}{% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+        <script>
+        // This code needs to be run after the bootstrap.min.js file has been run.
+        var triggerTabList = [].slice.call(document.querySelectorAll('#pills-race-tab, #pills-qual-tab, #pills-sprint-tab'))
+        triggerTabList.forEach(function (triggerEl) {
+          var tabTrigger = new bootstrap.Tab(triggerEl)
+
+          triggerEl.addEventListener('click', function (event) {
+            event.preventDefault()
+            tabTrigger.show()
+          })
+        });
+
+        jQuery(document).ready(function($) {
+            $(".href-row").click(function() {
+                window.location = window.location + (this).dataset["href"];
+            });
+        });
+        </script>
     </body>
 </html>
