@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 from os import path
 from django.conf import settings
@@ -7,15 +8,16 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
+import csv
 
 from f1site.models import Driver, Event, GP, Team, Track, Qualifying, Sprint, Race
-from .f1utils import getYearRankings, getRankingsByPosition, getRankingsByPoints
+from .f1utils import getYearRaceRankingsByPosition, getYearRankingsByPoints, getRankingsByPosition, getRankingsByPoints, POSITION_DNF
 
 
 # URL: /
 def viewIndex(request):
     curYear = datetime.now().year
-    rankings = getYearRankings(curYear)
+    rankings = getYearRaceRankingsByPosition(curYear)
 
     context = {
         'currentYear': curYear,
@@ -25,10 +27,15 @@ def viewIndex(request):
 
 
 # URL: /drivers
-def viewDriverRanking(request):
-    gp = GP.objects.filter(date__year=datetime.now().year.real)
+def viewDriverRanking(request, year=None):
+    if (year is None):
+        year = datetime.now().year
 
-    context = {'drivers': Driver.objects.all()}
+    rankings = getYearRankingsByPoints(year)
+    context = {
+        'year': year,
+        'rankings': rankings
+    }
     return render(request, 'drivers.html', context)
 
 
@@ -60,6 +67,37 @@ def viewGPRanking(request, gpID):
             ranking.driver = Driver.objects.get(id=ranking.driverID)
 
     return render(request, 'gp.html', context)
+
+
+class SprintResult:
+    def __init__(self, position, points, totalTime):
+        self.position = position
+        self.points = points
+        self.totalTime = totalTime
+
+
+class QualResult:
+    def __init__(self, position, fastestLap):
+        self.position = position
+        self.fastestLap = fastestLap
+
+
+class RaceResult:
+    def __init__(self, position, points, totalTime):
+        self.position = position
+        self.points = points
+        self.totalTime = totalTime
+
+
+class GPResult:
+    raceResult = None
+    sprintResult = None
+    qualResult = None
+
+    def __init__(self, gpID, driverID, driverNumber):
+        self.gpID = gpID
+        self.driverID = driverID
+        self.driverNumber = driverNumber
 
 
 # URL: /teams

@@ -32,14 +32,14 @@ class Event(models.Model):
     driver = models.ForeignKey('Driver', null=False, on_delete=models.CASCADE)
     
     # Driver Team: the team the driver was playing for within this particular race.
-    driverTeam = models.ForeignKey('Team', null=False, on_delete=models.CASCADE)
+    driverTeam = models.ForeignKey('Team', null=True, on_delete=models.CASCADE)
 
-    qualifying = models.ForeignKey('Qualifying', null=False, on_delete=models.DO_NOTHING)
-    race = models.ForeignKey('Race', null=False, on_delete=models.DO_NOTHING)
+    qualifying = models.ForeignKey('Qualifying', null=True, on_delete=models.DO_NOTHING)
+    race = models.ForeignKey('Race', null=True, on_delete=models.DO_NOTHING)
     sprint = models.ForeignKey('Sprint', null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return f'{self.gp.name} - {self.driver} ({self.driverTeam})'
+        return f'{self.gp.name} - {self.driver}'
 
 
 class Qualifying(models.Model):
@@ -52,21 +52,21 @@ class Sprint(models.Model):
     # id = models.BigAutoField() <--- PRIMARY KEY
     totalTime = models.TimeField(null=False)
     position = models.PositiveSmallIntegerField(null=False, default=0)
-    points = models.PositiveSmallIntegerField(null=False)
+    points = models.FloatField(null=False)
 
 
 class Race(models.Model):
     # id = models.BigAutoField() <--- PRIMARY KEY
     totalTime = models.TimeField(null=False)
     position = models.PositiveSmallIntegerField(null=False, default=0)
-    points = models.PositiveSmallIntegerField(null=False)
+    points = models.FloatField(null=False)
 
 
 class Driver(models.Model):
     # id = models.BigAutoField() <--- PRIMARY KEY
     name = models.CharField(max_length=70, null=False)
     abvr = models.CharField(max_length=3, null=False)
-    team = models.ForeignKey('Team', null=False, on_delete=models.CASCADE)
+    team = models.ForeignKey('Team', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name}'
@@ -75,7 +75,6 @@ class Driver(models.Model):
 class Team(models.Model):
     # id = models.BigAutoField() <--- PRIMARY KEY
     name = models.CharField(max_length=45, null=False)
-    location = models.CharField(max_length=45, null=False)
 
     def __str__(self):
         return f'{self.name}'
